@@ -65,8 +65,8 @@ Preview never starts an archive transfer.
 Open the repository in Android Studio with JDK 17 and Android SDK 35, then run the app configuration. With Gradle 8.11.1 installed:
 
 ~~~bash
-gradle --no-daemon :app:testDebugUnitTest
-gradle --no-daemon :app:assembleDebug
+./gradlew --no-daemon :app:testDebugUnitTest
+./gradlew --no-daemon :app:assembleDebug
 ~~~
 
 The CI workflow publishes the debug APK and source kit as a GitHub Actions artifact. These are development builds, not signed production releases.

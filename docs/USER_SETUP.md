@@ -5,7 +5,6 @@
 
 - Android Studio with Android SDK Platform 35 and Build Tools 35.0.0.
 - JDK 17.
-- Gradle 8.11.1 for command-line builds.
 - Android 8.0 (API 26) or newer for runtime installation.
 
 ## Open and build
@@ -20,8 +19,8 @@
 Command-line verification:
 
 ~~~bash
-gradle --no-daemon :app:testDebugUnitTest
-gradle --no-daemon :app:assembleDebug
+./gradlew --no-daemon :app:testDebugUnitTest
+./gradlew --no-daemon :app:assembleDebug
 ~~~
 
 The debug APK is created at app/build/outputs/apk/debug/app-debug.apk.
