@@ -1,38 +1,35 @@
-# Release Verification Checklist
 
-Do not mark a release as verified until each relevant item has evidence.
+# Release Checklist
 
-## Source and build
-- [ ] Gradle sync completes with documented JDK and Android SDK.
-- [ ] Debug build completes.
-- [ ] Release build completes.
-- [ ] APK signature is verified.
-- [ ] No secrets, signing keys, or local configuration files are included.
+## Source and scope
+- [ ] Version and release notes updated.
+- [ ] README, user manual, architecture, privacy and roadmap match implementation.
+- [ ] No deferred feature is described as implemented.
+- [ ] Third-party code and dependencies have license review.
 
-## Functional
-- [ ] Valid public GitHub repository preview succeeds.
-- [ ] Invalid URL is rejected locally.
-- [ ] Private or unavailable repository produces a safe error.
-- [ ] Preview does not enqueue an archive download.
-- [ ] Download begins only after the explicit user action.
-- [ ] Downloaded ZIP opens and matches the selected default branch.
+## Automated verification
+- [ ] GitHub Actions unit tests pass.
+- [ ] Debug APK assembly passes.
+- [ ] Source-kit and APK artifact are present.
+- [ ] Dependency and workflow update checks are enabled.
 
-## Device
-- [ ] Minimum supported Android version tested.
-- [ ] Current Android version tested.
-- [ ] Download Manager notification and destination tested.
-- [ ] Network loss and retry behavior observed.
-- [ ] Low-storage behavior observed.
+## Device verification
+- [ ] App launches on minimum supported API.
+- [ ] All five panels render and navigate.
+- [ ] Share intent handles valid and malformed content.
+- [ ] GitHub public preview works.
+- [ ] GitLab public preview works, including nested namespace.
+- [ ] Preview alone never starts a transfer.
+- [ ] Archive download completes and appears in Downloads.
+- [ ] Queue handles failed and paused states.
+- [ ] Manifest is written and SHA-256 is recorded when file access works.
+- [ ] Portrait, landscape, small screens and system bars are checked.
 
 ## Security and privacy
-- [ ] Only required permissions are declared.
-- [ ] No cleartext network traffic is enabled.
-- [ ] No credentials are collected or logged.
-- [ ] Downloaded content is never executed.
-- [ ] Source license and attribution guidance is present.
+- [ ] No credentials or tokens in source.
+- [ ] No arbitrary crawling or provider-control bypass.
+- [ ] Downloaded files are never executed.
+- [ ] SHA-256 is described as a fingerprint, not provider authenticity proof.
+- [ ] App-private manifest storage is documented.
 
-## Documentation
-- [ ] README matches current behavior.
-- [ ] User Setup instructions are reproducible.
-- [ ] User Manual matches the UI.
-- [ ] Known limitations and unverified areas are explicit.
+A release must not be called device-verified until the device checks above have been performed and recorded.

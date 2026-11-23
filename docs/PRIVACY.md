@@ -1,11 +1,30 @@
-# Privacy and Network Behavior
 
-Project Harvester 0.1.0 has no custom server, analytics SDK, advertising SDK, or account system.
+# Privacy and Data Handling
 
-When a user requests a preview, the app sends the public GitHub owner/repository path to GitHub's public repository metadata API. When the user explicitly starts a download, Android Download Manager requests the selected branch archive from GitHub's codeload service.
+Project Harvester 0.2.0 is local-first and has no custom backend, analytics, telemetry or user account.
 
-The app does not request a GitHub password, personal access token, or other credential. It does not upload local files. It does not automatically traverse links found in repository descriptions or source files.
+## Network requests
 
-Android and network providers may retain connection metadata under their own policies. Users should review the privacy terms of the services they use.
+- GitHub public repository metadata is requested from api.github.com.
+- GitLab.com public project metadata is requested from gitlab.com.
+- Approved archives are downloaded from the provider's official archive host through Android Download Manager.
+- Reference-only URLs are not fetched by the app; they are saved locally or opened in the user's browser.
 
-Future analytics, cloud synchronization, account features, or additional data collection require a separate documented product and privacy decision.
+## Stored data
+
+- Saved source URLs are stored in app-private SharedPreferences.
+- Pending transfer metadata is temporarily stored in app-private SharedPreferences.
+- Terminal transfer manifests are stored under app-private files/project-manifests/.
+- ZIP archives are stored in Android's public Downloads folder.
+
+## Manifest fields
+
+Manifests may contain provider, source URL, project name, default branch, description, visibility, archive URL, filename, Android download ID, byte count, status, local URI, timestamps, failure reason and SHA-256 digest.
+
+## Not collected
+
+The app does not request account credentials, personal access tokens, passwords, contacts, location, microphone, camera or other personal profile information. No telemetry or analytics endpoint is configured.
+
+## User control
+
+Users can remove individual saved links in the Library panel. Clearing app data removes all local links and private manifests. Downloaded ZIP files can be managed through the device's Downloads interface. App-private manifests are removed when app data is cleared or the app is uninstalled.

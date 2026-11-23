@@ -1,74 +1,45 @@
-# User Setup and Developer Setup
 
-## 1. Installable app status
+# User Setup — Project Harvester 0.2.0
 
-This repository contains Android source code. A signed APK is not included in the initial source baseline. Build and device verification must be completed before distributing an APK.
+## Requirements
 
-## 2. Device requirements
-
-- Android 8.0 (API 26) or later.
-- Network access for public GitHub metadata and archive requests.
-- Sufficient free storage for the selected ZIP archive.
-- Android Download Manager enabled.
-
-## 3. Developer prerequisites
-
-- Android Studio with a compatible Android SDK.
+- Android Studio with Android SDK Platform 35 and Build Tools 35.0.0.
 - JDK 17.
-- Android SDK Platform 35 (or the version specified by the app module).
-- Gradle version compatible with the Android Gradle Plugin configured in the root build file.
+- Android 8.0 (API 26) or newer for runtime installation.
 
-## 4. Open and build
+## Open and build
 
 1. Clone or download this repository.
 2. Open the repository root in Android Studio.
-3. Allow Gradle sync to complete.
-4. Confirm that the Android SDK platform and JDK versions match the project configuration.
-5. Connect an Android device with USB debugging enabled, or start an emulator.
-6. Select the app run configuration and build/run the application.
+3. Allow Gradle sync to finish.
+4. Select the app run configuration.
+5. Connect an Android device or start an emulator.
+6. Build and run the app.
 
-Command-line build from the repository root:
+Command-line verification:
 
-```bash
-gradle :app:assembleDebug
-```
+~~~bash
+./gradlew --no-daemon :app:testDebugUnitTest
+./gradlew --no-daemon :app:assembleDebug
+~~~
 
-If Android Studio generates a local Gradle wrapper for the project, the wrapper can be used instead:
+The debug APK is created at app/build/outputs/apk/debug/app-debug.apk.
 
-```bash
-./gradlew :app:assembleDebug
-```
+## Download the build kit
 
-The generated debug APK is normally located at:
+After CI completes, open the repository Actions tab, select the latest Android CI run, and download the Project-Harvester-0.2.0-kit artifact. It contains the debug APK and source kit ZIP.
 
-```text
-app/build/outputs/apk/debug/app-debug.apk
-```
+The APK is a debug build. It is not a signed production release and may show installation warnings.
 
-## 5. Install the debug APK
+## Device verification
 
-With Android Debug Bridge available:
+Before relying on a build, test:
+- launch and navigation across all five panels;
+- share a GitHub and GitLab public project URL into the app;
+- preview valid and invalid URLs;
+- confirm that preview alone never starts a download;
+- download a small public archive and inspect its manifest;
+- test network loss and Android Download Manager failure states;
+- check layout with system bars, portrait/landscape and a small phone screen.
 
-```bash
-adb install -r app/build/outputs/apk/debug/app-debug.apk
-```
-
-## 6. First-run verification
-
-- Launch the app.
-- Preview a known public GitHub repository.
-- Confirm that the metadata and default branch are displayed.
-- Confirm that preview does not create a download.
-- Start the download manually.
-- Confirm the ZIP appears in Downloads and can be opened as an archive.
-
-## 7. Release build
-
-A production release must be signed using a maintainer-controlled keystore. Do not commit keystores, passwords, signing properties, API tokens, or private credentials. Configure signing secrets outside the repository and verify the resulting APK before publication.
-
-## 8. Troubleshooting
-
-- Gradle sync failure: verify JDK 17, SDK installation, and network access to dependency repositories.
-- SDK missing: install the configured Android SDK platform from Android Studio SDK Manager.
-- Device not detected: verify USB debugging and the host's ADB driver/permissions.
-- Download failure: inspect Android Download Manager and device storage.
+Physical-device and emulator checks must be recorded separately from CI unit tests.
