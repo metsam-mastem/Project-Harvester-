@@ -49,7 +49,7 @@ public final class ProjectManifestStore {
         return ids;
     }
 
-    public static File recordCompletion(Context context, long downloadId, String status,
+    public static synchronized File recordCompletion(Context context, long downloadId, String status,
                                         long downloadedBytes, String sha256, String localUri,
                                         String failureReason) throws IOException {
         SharedPreferences prefs = preferences(context);
