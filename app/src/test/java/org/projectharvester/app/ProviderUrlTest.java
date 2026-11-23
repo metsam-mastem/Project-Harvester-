@@ -60,6 +60,11 @@ public class ProviderUrlTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void rejectsTraversalSegmentsInReferenceUrls() {
+        ProviderUrl.parse("https://www.hackster.io/../private");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void rejectsCredentialBearingUrls() {
         ProviderUrl.parse("https://user:pass@github.com/owner/project");
     }

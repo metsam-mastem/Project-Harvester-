@@ -1,6 +1,7 @@
 package org.projectharvester.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import org.json.JSONObject;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -463,6 +468,64 @@ public final class MainActivity extends Activity {
         }
         if (count == 0) content.addView(cardWithText("Queue is empty", "Approved archive transfers will appear here."));
         content.addView(cardWithText("Integrity records", manifestCount() + " private JSON manifests. Each record stores source, provider, branch, archive URL, transfer result and SHA-256 when available."), verticalMargin());
+        addManifestRecords(content);
+    }
+
+    private void addManifestRecords(LinearLayout content) {
+        content.addView(text("PROJECT DNA RECORDS", 10, ACCENT, true), verticalMargin());
+        java.io.File directory = new java.io.File(getFilesDir(), "project-manifests");
+        java.io.File[] records = directory.listFiles((dir, name) -> name.endsWith(".json"));
+        if (records == null || records.length == 0) {
+            content.addView(cardWithText("No Project DNA records yet", "A record appears after an archive transfer reaches a terminal state."), verticalMargin());
+            return;
+        }
+        Arrays.sort(records, (left, right) -> Long.compare(right.lastModified(), left.lastModified()));
+        for (java.io.File file : records) {
+            JSONObject data;
+            try { data = new JSONObject(readManifestText(file)); }
+            catch (Exception exception) { data = new JSONObject(); }
+            String project = data.optString("project", file.getName());
+            String provider = data.optString("provider", "Unknown provider");
+            String branch = data.optString("default_branch", "Unknown branch");
+            String status = data.optString("status", "Unknown status");
+            String digest = data.optString("sha256", "Not available");
+            if (digest.length() > 24) digest = digest.substring(0, 24) + "…";
+            LinearLayout item = card();
+            item.addView(text(project, 15, TEXT, true));
+            item.addView(text(provider + "  ·  " + branch + "  ·  " + status, 12, MUTED, false));
+            item.addView(text("SHA-256: " + digest, 11, MUTED, false));
+            Button inspect = secondaryButton("Inspect provenance manifest");
+            item.addView(inspect, fullWidth());
+            inspect.setOnClickListener(view -> {
+                try {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Project DNA")
+                            .setMessage(readManifestText(file))
+                            .setPositiveButton("Close", null)
+                            .show();
+                } catch (Exception exception) {
+                    new AlertDialog.Builder(this).setTitle("Project DNA")
+                            .setMessage("The manifest could not be read.")
+                            .setPositiveButton("Close", null).show();
+                }
+            });
+            content.addView(item, verticalMargin());
+        }
+    }
+
+    private String readManifestText(java.io.File file) throws IOException {
+        try (FileInputStream input = new FileInputStream(file);
+             ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4096];
+            int total = 0;
+            int read;
+            while ((read = input.read(buffer)) != -1) {
+                total += read;
+                if (total > 256 * 1024) throw new IOException("Manifest exceeds the local display limit.");
+                output.write(buffer, 0, read);
+            }
+            return new String(output.toByteArray(), StandardCharsets.UTF_8);
+        }
     }
 
     private void buildLibrary(LinearLayout content) {
@@ -479,6 +542,14 @@ public final class MainActivity extends Activity {
             Button open = secondaryButton("Open in Discover");
             item.addView(open, fullWidth());
             open.setOnClickListener(view -> { showScreen("discover"); if (urlInput != null) urlInput.setText(source); });
+            Button remove = secondaryButton("Remove from library");
+            item.addView(remove, fullWidth());
+            remove.setOnClickListener(view -> {
+                Set<String> remaining = savedSources();
+                remaining.remove(source);
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putStringSet(LIBRARY_KEY, remaining).apply();
+                showScreen("library");
+            });
             content.addView(item, verticalMargin());
         }
     }

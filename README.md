@@ -18,7 +18,7 @@ Project Harvester is a local-first Android workspace for discovering public proj
 - Separate preview and explicit archive-download actions.
 - Android Download Manager queue visibility and completion handling.
 - Local source library and Android Share-to-Harvester plain-text link intake.
-- Private JSON provenance manifest for each terminal transfer.
+- Private JSON provenance manifest for each terminal transfer, with an in-app Project DNA inspector.
 - Streaming SHA-256 digest after a completed archive is readable. This is a local fingerprint, not an upstream authenticity check.
 - Bounded metadata responses, timeouts and provider-specific error messages.
 - CI unit tests, debug APK build and downloadable source-kit artifact.

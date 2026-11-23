@@ -35,7 +35,7 @@ Use the Android Share action in a browser or another app, then select Project Ha
 
 ## Downloads panel
 
-The Downloads panel reads the Android system Download Manager queue. It shows the latest transfers and their status, transferred bytes and total size when available. Android owns background scheduling and notifications; the app does not promise segmented transfers or manual pause/resume controls.
+The Downloads panel reads the Android system Download Manager queue and lists inspectable Project DNA manifests for completed/failed transfers. It shows the latest transfers and their status, transferred bytes and total size when available. Android owns background scheduling and notifications; the app does not promise segmented transfers or manual pause/resume controls.
 
 After a transfer completes, the app attempts to calculate SHA-256 and writes a provenance manifest in app-private storage. A manifest may state that the hash is unavailable if Android cannot expose the downloaded file.
 

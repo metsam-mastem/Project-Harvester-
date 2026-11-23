@@ -54,6 +54,9 @@ public final class ProjectManifestStore {
                                         String failureReason) throws IOException {
         SharedPreferences prefs = preferences(context);
         String pending = prefs.getString(Long.toString(downloadId), null);
+        File directory = new File(context.getFilesDir(), "project-manifests");
+        File destination = new File(directory, "project-" + downloadId + ".json");
+        if (pending == null && destination.isFile()) return destination;
         JSONObject manifest;
         try {
             manifest = pending == null ? new JSONObject() : new JSONObject(pending);
@@ -67,10 +70,8 @@ public final class ProjectManifestStore {
         } catch (JSONException exception) {
             throw new IOException("Could not create the provenance manifest.", exception);
         }
-        File directory = new File(context.getFilesDir(), "project-manifests");
         if (!directory.exists() && !directory.mkdirs())
             throw new IOException("Could not create the private manifest directory.");
-        File destination = new File(directory, "project-" + downloadId + ".json");
         try (FileOutputStream output = new FileOutputStream(destination)) {
             output.write(manifest.toString(2).getBytes(StandardCharsets.UTF_8));
             output.getFD().sync();

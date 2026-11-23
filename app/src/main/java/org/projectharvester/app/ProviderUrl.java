@@ -63,6 +63,7 @@ public final class ProviderUrl {
         }
         Provider reference = classifyReferenceHost(host);
         if (reference == null || parts.length < 1) throw new IllegalArgumentException("This source is not supported yet.");
+        for (String part : parts) requireSegment(part);
         return new ProviderUrl(reference, "https://" + host + "/" + path, host, null, null, null);
     }
 
