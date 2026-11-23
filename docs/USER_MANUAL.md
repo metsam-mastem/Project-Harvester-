@@ -10,7 +10,7 @@ The app has five panels: Overview, Discover, Downloads, Library and Settings.
 1. Open Discover.
 2. Paste a clean HTTPS project URL.
 3. Select Preview source.
-4. Review the provider, project name, default branch, visibility and archive status.
+4. Review the provider, project name, default branch, visibility, provider-reported license and archive status. A missing license is shown as Not detected; it is not a permission to reuse the source.
 5. Choose one action:
    - Download approved archive for a public GitHub or GitLab.com project.
    - Save source to local library to keep a reference on this device.

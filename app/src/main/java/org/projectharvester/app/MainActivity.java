@@ -332,7 +332,7 @@ public final class MainActivity extends Activity {
                     String description = metadata.description.isEmpty() ? "No description provided." : metadata.description;
                     previewView.setText("Provider: " + metadata.provider + "\nProject: " + metadata.fullName
                             + "\nDefault branch: " + metadata.defaultBranch + "\nVisibility: " + metadata.visibility
-                            + "\nArchived: " + (metadata.archived ? "Yes" : "No")
+                            + "\nLicense: " + metadata.license + "\nArchived: " + (metadata.archived ? "Yes" : "No")
                             + "\nDescription: " + description + "\nSource: " + metadata.htmlUrl
                             + "\n\nPreview complete. No archive has been downloaded.");
                     statusView.setText(metadata.archived
@@ -342,7 +342,7 @@ public final class MainActivity extends Activity {
                 });
             } catch (Exception exception) {
                 mainHandler.post(() -> {
-                    if (request != previewGeneration) return;
+                    if (!previewGate.isCurrent(request)) return;
                     previewButton.setEnabled(true);
                     selectedSource = null;
                     selectedMetadata = null;

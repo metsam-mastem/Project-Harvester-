@@ -17,6 +17,7 @@ Project DNA is the per-archive provenance record. It makes a downloaded archive 
 | default_branch | Branch selected by provider metadata |
 | description | Provider description, if supplied |
 | visibility | Public/private metadata |
+| license | Provider-reported license identifier/name, or Not detected |
 | archived | Provider archived state |
 | archive_url | Archive endpoint used for transfer |
 | file_name | Destination filename |

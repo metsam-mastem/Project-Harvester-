@@ -8,7 +8,7 @@ Research date: 2026-11-23. This section records implementation patterns consider
 **XDM — Android download manager**  
 https://github.com/itsolaph/xdm
 
-Useful patterns documented by the project:
+License: GPL-3.0. The repository is used only as a design reference; no XDM source code or library is included.\n\nUseful patterns documented by the project:
 - persistent queue and clear per-item state;
 - bounded parallelism;
 - HTTP Range and segmented transfer only when the server supports it;
@@ -20,7 +20,7 @@ Adopted now: explicit transfer queue visibility, unique destination filenames, b
 
 ## Adaptive Android user experience
 
-**Android adaptive app samples**  
+**Android adaptive app samples (Apache-2.0)**  
 https://github.com/android/adaptive-apps-samples
 
 Useful patterns:
@@ -37,10 +37,10 @@ The drawer/rail/bar pattern informs future tablet navigation. Current 0.2.0 keep
 
 ## GitLab client and provider patterns
 
-**OctoLab — GitLab mobile client**  
+**OctoLab — GitLab mobile client (Apache-2.0)**  
 https://github.com/secninjaz/OctoLab
 
-The project demonstrates that GitLab clients need provider-specific repository, branch, tag, commit, release and pipeline concepts, plus clear handling of self-hosted instances and authentication. Project Harvester currently implements only public GitLab.com project metadata and archive retrieval; it does not implement account authentication or self-hosted hosts.
+The project demonstrates provider-specific repository, branch, tag, commit, release, bookmark, project browsing and theme concepts, plus clear handling of self-hosted instances and authentication. The Apache-2.0 license was inspected; no source code was copied. Project Harvester currently implements only public GitLab.com project metadata and archive retrieval; it does not implement account authentication or self-hosted hosts.
 
 A GitLab search for Android GitLab clients also surfaced LabCoat, Gitalchemy and other mobile-client projects. These are useful reference points for provider-specific terminology and navigation, not dependencies.
 
