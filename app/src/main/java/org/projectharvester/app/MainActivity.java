@@ -59,7 +59,7 @@ public final class MainActivity extends Activity {
     private Button previewButton, downloadButton, saveButton, openButton;
     private ProviderUrl selectedSource;
     private ProjectMetadata selectedMetadata;
-    private int previewGeneration = 0;
+    private final PreviewGate previewGate = new PreviewGate();
     private boolean receiverRegistered = false;
 
     private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
@@ -90,6 +90,7 @@ public final class MainActivity extends Activity {
             else registerReceiver(downloadReceiver, filter);
             receiverRegistered = true;
         }
+        reconcilePendingDownloads();
     }
 
     @Override protected void onStop() {
@@ -281,7 +282,8 @@ public final class MainActivity extends Activity {
         urlInput.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                previewGeneration++;
+                previewGate.invalidate();
+                if (previewButton != null) previewButton.setEnabled(true);
                 selectedSource = null;
                 selectedMetadata = null;
                 if (downloadButton != null) downloadButton.setEnabled(false);
@@ -295,7 +297,7 @@ public final class MainActivity extends Activity {
 
     private void previewSource() {
         final String raw = urlInput.getText().toString().trim();
-        final int request = ++previewGeneration;
+        final int request = previewGate.next();
         selectedSource = null;
         selectedMetadata = null;
         downloadButton.setEnabled(false);
@@ -322,7 +324,7 @@ public final class MainActivity extends Activity {
                 ProjectMetadata metadata = source.provider == ProviderUrl.Provider.GITHUB
                         ? new GitHubRepositoryClient().fetch(source) : new GitLabProjectClient().fetch(source);
                 mainHandler.post(() -> {
-                    if (request != previewGeneration || urlInput == null
+                    if (!previewGate.isCurrent(request) || urlInput == null
                             || !raw.equals(urlInput.getText().toString().trim())) return;
                     previewButton.setEnabled(true);
                     selectedSource = source;
@@ -345,6 +347,8 @@ public final class MainActivity extends Activity {
                     selectedSource = null;
                     selectedMetadata = null;
                     downloadButton.setEnabled(false);
+                    saveButton.setEnabled(false);
+                    openButton.setEnabled(false);
                     String message = exception.getMessage();
                     statusView.setText(message == null ? "Could not retrieve provider metadata." : message);
                 });
@@ -380,6 +384,12 @@ public final class MainActivity extends Activity {
             showScreen("downloads");
         } catch (Exception exception) {
             statusView.setText("Could not queue the archive. Check network and Android Download Manager settings.");
+        }
+    }
+
+    private void reconcilePendingDownloads() {
+        for (Long id : ProjectManifestStore.pendingDownloadIds(this)) {
+            executor.execute(() -> finalizeDownload(id));
         }
     }
 
@@ -606,7 +616,7 @@ public final class MainActivity extends Activity {
     private int dp(int value) { return (int) (value * getResources().getDisplayMetrics().density + 0.5f); }
 
     @Override protected void onDestroy() {
-        previewGeneration++;
+        previewGate.invalidate();
         executor.shutdownNow();
         super.onDestroy();
     }

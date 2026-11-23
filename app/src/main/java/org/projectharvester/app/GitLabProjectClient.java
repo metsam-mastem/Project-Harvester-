@@ -46,8 +46,11 @@ public final class GitLabProjectClient {
             String webUrl = safeString(json, "web_url", source.sourceUrl);
             if (fullName.isEmpty() || branch.isEmpty())
                 throw new RepositoryException("GitLab did not return a usable project name and default branch.");
+            JSONObject licenseObject = json.optJSONObject("license");
+            String license = licenseObject == null ? "Not detected"
+                    : safeString(licenseObject, "key", safeString(licenseObject, "name", "Not detected"));
             return new ProjectMetadata("GitLab", fullName, branch, webUrl,
-                    safeString(json, "description", ""), visibility,
+                    safeString(json, "description", ""), visibility, license,
                     json.optBoolean("archived", false), false);
         } catch (JSONException exception) {
             throw new RepositoryException("GitLab returned unreadable project metadata.");

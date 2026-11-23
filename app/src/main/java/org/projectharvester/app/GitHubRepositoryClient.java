@@ -49,10 +49,13 @@ public final class GitHubRepositoryClient {
             if (fullName.isEmpty() || branch.isEmpty())
                 throw new RepositoryException("GitHub did not return a usable repository name and default branch.");
             boolean isPrivate = json.optBoolean("private", false);
+            JSONObject licenseObject = json.optJSONObject("license");
+            String license = licenseObject == null ? "Not detected"
+                    : safeString(licenseObject, "spdx_id", safeString(licenseObject, "name", "Not detected"));
             return new ProjectMetadata("GitHub", fullName, branch,
                     safeString(json, "html_url", source.sourceUrl),
                     safeString(json, "description", ""), isPrivate ? "private" : "public",
-                    json.optBoolean("archived", false), isPrivate);
+                    license, json.optBoolean("archived", false), isPrivate);
         } catch (JSONException exception) {
             throw new RepositoryException("GitHub returned unreadable repository metadata.");
         } finally { if (connection != null) connection.disconnect(); }

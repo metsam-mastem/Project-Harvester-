@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /** Stores provenance and completion evidence in app-private storage. */
 public final class ProjectManifestStore {
@@ -26,6 +29,7 @@ public final class ProjectManifestStore {
             manifest.put("default_branch", metadata.defaultBranch);
             manifest.put("description", metadata.description);
             manifest.put("visibility", metadata.visibility);
+            manifest.put("license", metadata.license);
             manifest.put("archived", metadata.archived);
             manifest.put("archive_url", archiveUrl);
             manifest.put("file_name", fileName);
@@ -34,6 +38,15 @@ public final class ProjectManifestStore {
             manifest.put("created_at_epoch_ms", System.currentTimeMillis());
             preferences(context).edit().putString(Long.toString(downloadId), manifest.toString()).apply();
         } catch (JSONException ignored) { }
+    }
+
+    public static List<Long> pendingDownloadIds(Context context) {
+        List<Long> ids = new ArrayList<>();
+        for (Map.Entry<String, ?> entry : preferences(context).getAll().entrySet()) {
+            try { ids.add(Long.parseLong(entry.getKey())); }
+            catch (NumberFormatException ignored) { }
+        }
+        return ids;
     }
 
     public static File recordCompletion(Context context, long downloadId, String status,
