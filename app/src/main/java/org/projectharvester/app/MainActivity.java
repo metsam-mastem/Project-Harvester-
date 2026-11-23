@@ -444,8 +444,7 @@ public final class MainActivity extends Activity {
             content.addView(cardWithText("Queue could not be read", "Android returned an error while reading download state."));
         }
         if (count == 0) content.addView(cardWithText("Queue is empty", "Approved archive transfers will appear here."));
-        content.addView(cardWithText("Integrity records", manifestCount() + " private JSON manifests",
-                "Each manifest stores source, provider, branch, archive URL, transfer result and SHA-256 when available."), verticalMargin());
+        content.addView(cardWithText("Integrity records", manifestCount() + " private JSON manifests. Each record stores source, provider, branch, archive URL, transfer result and SHA-256 when available."), verticalMargin());
     }
 
     private void buildLibrary(LinearLayout content) {
