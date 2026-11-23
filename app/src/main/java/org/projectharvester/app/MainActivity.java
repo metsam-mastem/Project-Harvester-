@@ -108,6 +108,13 @@ public final class MainActivity extends Activity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setBackgroundColor(BG);
         root.setPadding(dp(18), dp(12), dp(18), dp(10));
+        root.setOnApplyWindowInsetsListener((view, insets) -> {
+            view.setPadding(dp(18) + insets.getSystemWindowInsetLeft(),
+                    dp(12) + insets.getSystemWindowInsetTop(),
+                    dp(18) + insets.getSystemWindowInsetRight(),
+                    dp(10) + insets.getSystemWindowInsetBottom());
+            return insets;
+        });
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.VERTICAL);
         header.setPadding(dp(2), dp(8), dp(2), dp(12));

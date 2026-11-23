@@ -1,6 +1,5 @@
 package org.projectharvester.app;
 
-import android.net.Uri;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -101,10 +100,24 @@ public final class ProviderUrl {
         if (branch == null || branch.trim().isEmpty()) throw new IllegalArgumentException("The default branch is missing.");
         if (provider == Provider.GITHUB)
             return "https://codeload.github.com/" + owner + "/" + project
-                    + "/zip/refs/heads/" + Uri.encode(branch, "/");
+                    + "/zip/refs/heads/" + encode(branch, true);
         return "https://gitlab.com/api/v4/projects/" + encodedGitLabProjectPath()
-                + "/repository/archive.zip?sha=" + Uri.encode(branch);
+                + "/repository/archive.zip?sha=" + encode(branch, false);
     }
+    private static String encode(String value, boolean preserveSlash) {
+        String[] segments = preserveSlash ? value.split("/", -1) : new String[] { value };
+        StringBuilder result = new StringBuilder();
+        try {
+            for (int i = 0; i < segments.length; i++) {
+                if (i > 0 && preserveSlash) result.append('/');
+                result.append(URLEncoder.encode(segments[i], "UTF-8").replace("+", "%20"));
+            }
+        } catch (UnsupportedEncodingException exception) {
+            throw new IllegalStateException("UTF-8 is unavailable.", exception);
+        }
+        return result.toString();
+    }
+
     public String displayProvider() {
         switch (provider) {
             case GITHUB: return "GitHub";
