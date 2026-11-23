@@ -393,7 +393,7 @@ public final class MainActivity extends Activity {
                 } catch (Exception ignored) { }
                 try {
                     ProjectManifestStore.recordCompletion(this, id,
-                            hash == null ? "downloaded_hash_unavailable" : "downloaded_verified",
+                            hash == null ? "downloaded_hash_unavailable" : "downloaded_hashed",
                             bytes, hash, localUri, null);
                 } catch (IOException ignored) { }
             } else if (status == DownloadManager.STATUS_FAILED) {

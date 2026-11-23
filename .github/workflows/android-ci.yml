@@ -49,10 +49,17 @@ jobs:
       - name: Assemble debug APK
         run: gradle --no-daemon :app:assembleDebug
 
-      - name: Upload debug APK
+      - name: Package source kit
+        run: |
+          zip -r Project-Harvester-0.2.0-source-kit.zip . \
+            -x ".git/*" ".gradle/*" "app/build/*" "Project-Harvester-0.2.0-source-kit.zip"
+
+      - name: Upload APK and source kit
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: Project-Harvester-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Project-Harvester-0.2.0-kit
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            Project-Harvester-0.2.0-source-kit.zip
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30

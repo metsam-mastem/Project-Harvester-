@@ -39,6 +39,16 @@ public class ProviderUrlTest {
                 ProviderUrl.parse("https://www.nature.com/articles/example").provider);
     }
 
+    @Test
+    public void buildsProviderSpecificArchiveUrls() {
+        ProviderUrl gitlab = ProviderUrl.parse("https://gitlab.com/group/subgroup/project");
+        assertEquals("https://gitlab.com/api/v4/projects/group%2Fsubgroup%2Fproject/repository/archive.zip?sha=feature%2Fnew-ui",
+                gitlab.archiveUrl("feature/new-ui"));
+        ProviderUrl github = ProviderUrl.parse("https://github.com/owner/project");
+        assertEquals("https://codeload.github.com/owner/project/zip/refs/heads/feature/new-ui",
+                github.archiveUrl("feature/new-ui"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void rejectsCredentialBearingUrls() {
         ProviderUrl.parse("https://user:pass@github.com/owner/project");
