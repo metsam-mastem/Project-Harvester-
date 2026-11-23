@@ -2,10 +2,8 @@ package org.projectharvester.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 /** Stores provenance and completion evidence in app-private storage. */
 public final class ProjectManifestStore {
     private static final String PREFS = "project_harvester_manifests";
-
     private ProjectManifestStore() { }
 
     public static void recordPending(Context context, long downloadId, ProviderUrl source,
@@ -36,9 +33,7 @@ public final class ProjectManifestStore {
             manifest.put("status", "queued");
             manifest.put("created_at_epoch_ms", System.currentTimeMillis());
             preferences(context).edit().putString(Long.toString(downloadId), manifest.toString()).apply();
-        } catch (JSONException ignored) {
-            // JSONObject.put only throws for invalid names; fixed keys make this unreachable.
-        }
+        } catch (JSONException ignored) { }
     }
 
     public static File recordCompletion(Context context, long downloadId, String status,
@@ -59,11 +54,9 @@ public final class ProjectManifestStore {
         } catch (JSONException exception) {
             throw new IOException("Could not create the provenance manifest.", exception);
         }
-
         File directory = new File(context.getFilesDir(), "project-manifests");
-        if (!directory.exists() && !directory.mkdirs()) {
+        if (!directory.exists() && !directory.mkdirs())
             throw new IOException("Could not create the private manifest directory.");
-        }
         File destination = new File(directory, "project-" + downloadId + ".json");
         try (FileOutputStream output = new FileOutputStream(destination)) {
             output.write(manifest.toString(2).getBytes(StandardCharsets.UTF_8));
@@ -74,7 +67,6 @@ public final class ProjectManifestStore {
         prefs.edit().remove(Long.toString(downloadId)).apply();
         return destination;
     }
-
     private static SharedPreferences preferences(Context context) {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
