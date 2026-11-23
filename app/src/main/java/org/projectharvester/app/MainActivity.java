@@ -24,6 +24,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -127,7 +128,7 @@ public final class MainActivity extends Activity {
         subtitle.setPadding(0, dp(3), 0, 0);
         header.addView(subtitle);
         root.addView(header);
-        ScrollView navScroll = new ScrollView(this);
+        HorizontalScrollView navScroll = new HorizontalScrollView(this);
         navScroll.setHorizontalScrollBarEnabled(false);
         navScroll.setVerticalScrollBarEnabled(false);
         LinearLayout nav = new LinearLayout(this);
@@ -185,8 +186,8 @@ public final class MainActivity extends Activity {
     private void rebuildNavigationSelection() {
         if (root == null) return;
         View navScroll = root.getChildAt(1);
-        if (!(navScroll instanceof ScrollView)) return;
-        LinearLayout nav = (LinearLayout) ((ScrollView) navScroll).getChildAt(0);
+        if (!(navScroll instanceof HorizontalScrollView)) return;
+        LinearLayout nav = (LinearLayout) ((HorizontalScrollView) navScroll).getChildAt(0);
         nav.removeAllViews();
         addNavButton(nav, "Overview", "home");
         addNavButton(nav, "Discover", "discover");

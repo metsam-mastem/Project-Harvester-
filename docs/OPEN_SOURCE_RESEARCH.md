@@ -3,7 +3,7 @@
 
 Research date: 2026-11-23. This section records implementation patterns considered for Project Harvester. No third-party source code was copied into this repository.
 
-## Android download reliability
+## Android download reliability\n\nOfficial Android DownloadManager API reference: https://developer.android.com/reference/android/app/DownloadManager. The app uses the system queue query and completed-file descriptor APIs rather than reading deprecated filesystem path columns.
 
 **XDM — Android download manager**  
 https://github.com/itsolaph/xdm
@@ -35,7 +35,7 @@ https://developer.android.com/develop/ui/compose/components/drawer
 
 The drawer/rail/bar pattern informs future tablet navigation. Current 0.2.0 keeps a compact horizontal navigation strip to avoid introducing a new UI dependency.
 
-## GitLab client and provider patterns
+## GitLab API and provider patterns\n\nOfficial API references used to implement the public project metadata and archive adapter:\n- Projects API: https://docs.gitlab.com/api/projects/\n- Repository archive endpoint: https://docs.gitlab.com/api/repositories/\n\nThe project path is URL-encoded for the GitLab Projects API. The archive endpoint accepts a branch/tag/SHA in the sha parameter; this release uses the provider-reported default branch.\n\n## GitLab client and provider patterns
 
 **OctoLab — GitLab mobile client (Apache-2.0)**  
 https://github.com/secninjaz/OctoLab
