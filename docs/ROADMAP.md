@@ -1,69 +1,56 @@
+
 # Roadmap
 
-This roadmap separates the initial implemented baseline from future work. Planned items are not current capabilities.
+This file distinguishes implemented capabilities from planned work.
 
-## 0.1.0 — Android GitHub archive baseline
+## 0.2.0 — Provider-aware Android workspace
 
-- [x] Project charter and user documentation.
-- [x] Android application structure.
-- [x] Public GitHub repository URL validation.
-- [x] Public metadata preview.
-- [x] Explicit user action before archive download.
-- [x] Android Download Manager integration.
-- [ ] Reproducible Android build verification.
-- [ ] Emulator and physical-device verification.
-- [ ] End-to-end archive integrity verification.
+- [x] Five-panel native workspace: Overview, Discover, Downloads, Library, Settings.
+- [x] Strict HTTPS provider classification.
+- [x] Public GitHub metadata preview and default-branch ZIP.
+- [x] Public GitLab.com metadata preview, nested namespaces and default-branch archive.
+- [x] Reference-only classification for Hackster, GitBook, Instructables and Nature.
+- [x] Preview invalidation when the URL changes.
+- [x] Android Share intent for plain-text links.
+- [x] Local source library.
+- [x] Download queue visibility through Android Download Manager.
+- [x] Private provenance JSON manifest after terminal transfer state.
+- [x] Streaming SHA-256 fingerprint when completed file access is available.
+- [x] Bounded metadata response bodies and network timeouts.
+- [x] CI unit-test, debug APK and source-kit artifact workflow.
+- [ ] CI green evidence for this revision.
+- [ ] Emulator verification.
+- [ ] Physical Android device verification.
+- [ ] End-to-end GitHub and GitLab archive checks.
 
-## 0.2 — Discovery and provenance
+## 0.3 — Discovery depth
 
-- [ ] Structured preview model.
-- [ ] Download history stored locally.
-- [ ] Source URL and metadata manifest.
-- [ ] SHA-256 verification after download.
-- [ ] Better handling of provider errors and rate limits.
-- [ ] Automated unit and instrumentation tests.
+- [ ] File tree and file-level selection for GitHub and GitLab.
+- [ ] Tags, releases and commit metadata.
+- [ ] HTML bookmark-file import.
+- [ ] Batch preview with per-item approval.
+- [ ] Duplicate detection and local searchable catalog.
+- [ ] Provider-neutral discovery report with inaccessible/missed resources.
 
-## 0.3 — Provider adapter foundation
+## 0.4 — Hardware and documentation resources
 
-- [ ] Provider interface and capability declarations.
-- [ ] GitLab public project metadata and archive support.
-- [ ] Codeberg public repository support.
-- [ ] Provider-specific compliance and error handling.
-- [ ] Shared URL validation test suite.
+- [ ] Hackster project metadata capture where permitted.
+- [ ] Explicit BOM / Things list extraction.
+- [ ] Schematic, CAD, firmware and attachment discovery.
+- [ ] Instructables step and attachment discovery where permitted.
+- [ ] GitBook page snapshots where permitted.
+- [ ] Nature DOI, metadata and open-access link resolution.
+- [ ] Per-resource license and provenance records.
 
-## 0.4 — User-controlled collection
+## 0.5 — Reliable collection
 
-- [ ] Bookmark HTML import.
-- [ ] Batch preview without automatic transfer.
-- [ ] Per-item approval and selection.
-- [ ] Duplicate detection.
-- [ ] Local catalog and search.
-
-## 0.5 — Documentation and hardware project resources
-
-- [ ] GitBook page capture where permitted.
-- [ ] Hardware project resource discovery.
-- [ ] Explicit file and attachment selection.
-- [ ] Provenance and license metadata.
-- [ ] Generic web reference package with bounded, compliant extraction.
-
-## 0.6 — Download reliability
-
-- [ ] Pause/resume behavior assessment.
-- [ ] Retry and recovery policies.
-- [ ] Network constraint handling.
-- [ ] Range support detection and benchmarks before segmented transfer is considered.
-- [ ] Storage and battery profiling.
+- [ ] Pause/resume and retry behavior assessment.
+- [ ] Range support detection and segmented transfer only after benchmark evidence.
+- [ ] Recovery across process death and reboot.
+- [ ] ZIP traversal and archive-bomb inspection before any extraction feature.
+- [ ] Trusted checksum/signature comparison where providers expose reliable values.
+- [ ] Storage, battery and network profiling.
 
 ## Release gates
 
-Every release must pass:
-1. Static source review.
-2. Unit tests for URL parsing and provider behavior.
-3. Build verification.
-4. Android emulator tests.
-5. Physical-device tests for network and storage behavior.
-6. Security and privacy review.
-7. Documentation consistency review.
-
-Do not advertise a planned capability as available until its acceptance tests have passed.
+Every release requires unit tests, reproducible build, source review, privacy/security review, emulator checks, physical-device checks and end-to-end provider tests. CI passing does not imply device validation.

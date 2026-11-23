@@ -1,79 +1,56 @@
-# User Manual
 
-## Project Harvester 0.1.0
+# User Manual — Project Harvester 0.2.0
 
-This manual describes the initial Android baseline. Features not listed here are not part of the current release.
+## Panels
 
-## 1. What you need
+The app has five panels: Overview, Discover, Downloads, Library and Settings.
 
-- An Android device with network access.
-- Project Harvester installed from a build you trust.
-- A public GitHub repository URL, for example: `https://github.com/OWNER/REPOSITORY`.
+## Discover a source
 
-Private repositories are not supported in this release.
+1. Open Discover.
+2. Paste a clean HTTPS project URL.
+3. Select Preview source.
+4. Review the provider, project name, default branch, visibility and archive status.
+5. Choose one action:
+   - Download approved archive for a public GitHub or GitLab.com project.
+   - Save source to local library to keep a reference on this device.
+   - Open source in browser to inspect the original provider page.
 
-## 2. Discover a repository
+Preview does not download the archive.
 
-1. Open Project Harvester.
-2. Paste a public GitHub repository URL into the input field.
-3. Tap **Preview repository**.
-4. Wait for the metadata request to complete.
-5. Review the repository name, owner, default branch, and source URL.
+## Supported URL forms
 
-The preview step requests repository metadata only. It does not download the source archive.
+- GitHub: https://github.com/OWNER/REPOSITORY
+- GitLab: https://gitlab.com/GROUP/PROJECT or https://gitlab.com/GROUP/SUBGROUP/PROJECT
+- Hackster: public project page URL
+- GitBook: public documentation space URL
+- Instructables: public tutorial URL
+- Nature: public article or publication URL
 
-## 3. Download the archive
+The optional .git suffix is accepted for GitHub and GitLab repository URLs. Nested repository subpages are not accepted as project roots.
 
-1. Confirm that the preview refers to the intended repository.
-2. Review the source project's license and terms before reuse.
-3. Tap **Download archive**.
-4. Android Download Manager handles the transfer and may display a system notification.
-5. Open the device's Downloads application or file manager to locate the ZIP archive.
+## Share a link from Android
 
-The filename includes the repository name and selected default branch.
+Use the Android Share action in a browser or another app, then select Project Harvester. The app accepts the first HTTPS URL in shared plain text and validates it before displaying it. Shared text is treated as untrusted input.
 
-## 4. Supported URL format
+## Downloads panel
 
-Supported:
-- `https://github.com/OWNER/REPOSITORY`
-- `https://github.com/OWNER/REPOSITORY.git`
+The Downloads panel reads the Android system Download Manager queue. It shows the latest transfers and their status, transferred bytes and total size when available. Android owns background scheduling and notifications; the app does not promise segmented transfers or manual pause/resume controls.
 
-Not supported:
-- Private repository URLs.
-- GitHub file or directory URLs.
-- GitHub release pages.
-- GitLab, Bitbucket, Codeberg, GitBook, or other providers.
-- Arbitrary web pages.
+After a transfer completes, the app attempts to calculate SHA-256 and writes a provenance manifest in app-private storage. A manifest may state that the hash is unavailable if Android cannot expose the downloaded file.
 
-## 5. Common issues
+## Local Library
 
-### Invalid URL
-Use the public repository root URL, not a file, issue, pull request, or profile page.
+Saved links are stored locally in app-private preferences. Saving a reference does not copy the remote page, attachments or media.
 
-### Repository not found
-The repository may be private, deleted, renamed, or inaccessible. This version does not authenticate to private repositories.
+## Settings and privacy
 
-### Network error
-Check connectivity and retry later. Provider rate limits or temporary service errors may also prevent metadata lookup.
+The Settings panel describes provider boundaries, data locations and safety rules. See Privacy for the full data-handling description.
 
-### Download did not start
-Check Android Download Manager status, available storage, network restrictions, and whether the device permits downloads.
+## Important limits
 
-### Archive cannot be opened
-The transfer may be incomplete or the archive may be invalid. Remove the incomplete file and retry. Do not execute files from an untrusted repository.
-
-## 6. Safe handling
-
-- Treat all downloaded files as untrusted.
-- Inspect the project's license before copying or redistributing code.
-- Do not run unknown scripts or binaries.
-- Do not enter access tokens or passwords into Project Harvester.
-- Do not use collected material to bypass a provider's access restrictions.
-
-## 7. Privacy
-
-The app sends the repository URL's owner and repository identifiers to GitHub's public metadata endpoint and requests the selected archive from GitHub's codeload service. This initial version has no Project Harvester backend and no analytics service. Network providers may process requests under their own privacy policies.
-
-## 8. Feature status
-
-The initial baseline does not include full Git history, multi-provider discovery, file-level selection, batch imports, local catalog search, or archive extraction.
+- Only public GitHub and GitLab.com repositories can be downloaded.
+- Hackster, GitBook, Instructables and Nature are reference-only.
+- The app does not crawl arbitrary websites or bypass provider access controls.
+- ZIP files are not extracted or executed.
+- SHA-256 is a locally calculated fingerprint, not an upstream signature verification.

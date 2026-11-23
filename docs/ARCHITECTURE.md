@@ -1,86 +1,73 @@
-# Architecture — Project Harvester 0.1.0
 
-## 1. Architectural overview
+# Architecture — Project Harvester 0.2.0
 
-The initial implementation is a single-process Android application with no custom backend.
+## Runtime model
 
-```text
-User
- |
- v
+A single-process Android application; no custom backend, account system, telemetry or cloud storage.
+
+~~~text
 Android UI
- |
- +--> URL validation and normalization
- |
- +--> GitHub public metadata client
- |       |
- |       +--> GitHub REST API (repository metadata)
- |
- +--> Preview / explicit approval boundary
- |
- +--> Android Download Manager
-         |
-         +--> GitHub codeload archive endpoint
-                 |
-                 v
-          Android Downloads storage
-```
+  ├── Overview / Discover / Downloads / Library / Settings
+  ├── Share intent intake
+  └── Preview and explicit approval boundary
+        ├── ProviderUrl classifier
+        │     ├── GitHub
+        │     ├── GitLab.com
+        │     └── Reference-only: Hackster / GitBook / Instructables / Nature
+        ├── GitHub metadata client
+        ├── GitLab metadata client
+        ├── Android Download Manager
+        └── ProjectManifestStore + streaming SHA-256
+~~~
 
-## 2. Components
+## Provider boundary
 
-### Presentation layer
-Collects a repository URL, shows validation or metadata results, and exposes a separate download action. The download action remains disabled until a successful preview exists.
+ProviderUrl owns URL validation, provider classification, metadata endpoint construction and archive URL construction. It rejects non-HTTPS URLs, user-info, unexpected ports, query strings, fragments, encoded path segments and unsupported hosts.
 
-### URL validation
-Accepts only the documented GitHub repository URL form. It extracts owner and repository segments, removes an optional `.git` suffix, rejects unexpected path structures, and encodes path segments before constructing API requests.
+Downloadable adapters:
+- GitHub: public repository root URL; metadata from GitHub REST; ZIP from codeload.
+- GitLab.com: public project root URL, including nested group namespaces; metadata from GitLab REST v4; archive from GitLab's repository archive endpoint.
 
-### Provider client
-Calls the public GitHub repository metadata endpoint over HTTPS. It reads the default branch and repository identity. The initial release does not request a token and does not support private repositories.
+Reference-only providers:
+- Hackster.io
+- GitBook
+- Instructables
+- Nature
 
-### Approval boundary
-A successful metadata response creates a preview state. It does not enqueue or fetch an archive. Only a user tap on the download action can pass the approved repository and branch to the transfer component.
+Reference-only classification is deliberately not a crawler. It stores a URL locally or opens it in the user's browser.
 
-### Transfer component
-Uses Android Download Manager for the selected branch ZIP archive. The OS owns transfer scheduling, notification, and download lifecycle. The app does not promise segmented downloads or a specific resume policy.
+## Preview and approval
 
-### Local storage
-The archive is placed in the public Downloads area using a descriptive filename. The app does not index, unpack, execute, or modify the archive in this release.
+Preview performs a metadata GET only. The download button remains disabled until a successful public-project response is received. Editing the URL invalidates the previous selection. A generation token prevents stale asynchronous responses from replacing the latest preview.
 
-## 3. Data flow
+The transfer action rechecks the selected provider and metadata before building an archive URL. Android Download Manager owns transfer scheduling and system notifications.
 
-1. User enters a URL.
-2. App validates the URL locally.
-3. App requests public repository metadata.
-4. App displays owner, repository name, default branch, and source URL.
-5. User explicitly starts download.
-6. App creates a codeload archive request through Download Manager.
-7. Android stores the ZIP and reports transfer state through its system UI.
+## Metadata clients
 
-## 4. Network endpoints
+Both metadata clients use HTTPS and fixed provider hosts, bounded connect/read timeouts, a 1 MiB metadata body cap, and no automatic redirects. They distinguish missing, restricted, rate-limited and moved resources. No credentials are sent.
 
-- Metadata: `https://api.github.com/repos/{owner}/{repo}`
-- Archive: `https://codeload.github.com/{owner}/{repo}/zip/refs/heads/{branch}`
+## Transfer and provenance
 
-Only HTTPS is used. Redirects and availability are controlled by the provider and Android networking stack.
+Archive bytes are written by Android Download Manager to public Downloads. The app does not unpack, inspect or execute the archive.
 
-## 5. Trust boundaries
+On completion, the app attempts to stream the downloaded file through SHA-256. It stores a JSON manifest under app-private files/project-manifests/. The digest is an integrity fingerprint for later comparison; because no trusted provider checksum is currently retrieved, the digest alone does not prove authenticity.
 
-- Repository URL input is untrusted.
-- Provider metadata is external data and must not be interpreted as executable instructions.
-- Downloaded ZIP files are untrusted archives.
-- The app does not run scripts, binaries, build tools, or package installers from downloaded content.
-- No secrets are stored by the app.
+## Local state
 
-## 6. Current limitations
+- Saved references: app-private SharedPreferences.
+- Pending transfer metadata: app-private SharedPreferences until completion.
+- Completed/failed provenance: app-private JSON files.
+- Downloaded ZIP: public Android Downloads directory, managed by Android Download Manager.
 
-- Public GitHub repositories only.
-- Repository root URLs only; nested tree/blob paths are not treated as archive-selection instructions.
-- Default branch only.
-- ZIP snapshot only; no `.git` directory or full commit history.
-- No file-level selection, archive inspection, hash ledger, or manifest in this baseline.
-- No private repository or organization authentication.
-- No cross-provider adapter framework yet.
+## Security boundaries
 
-## 7. Planned evolution
+- User-supplied URLs are untrusted and parsed before use.
+- Only fixed HTTPS provider hosts are used for API/archive requests.
+- Provider responses are bounded and treated as data.
+- No secrets, tokens or passwords are stored.
+- No arbitrary web crawling, CAPTCHA bypass, authentication bypass or rate-limit evasion.
+- Downloaded archives are untrusted and never executed.
 
-Provider adapters, file-level discovery, user-approved selection, integrity manifests, archive safety checks, and local database indexing may be added in later releases. Each addition must preserve the preview/approval boundary and remain independently testable.
+## Known limitations
+
+No full Git history, tags/releases, per-file selection, segmented downloader, pause/resume controls, archive extraction, ZIP traversal/bomb inspection, HTML bookmark import, batch preview, duplicate detection, local content index, self-hosted GitLab, or hardware attachment harvesting.
