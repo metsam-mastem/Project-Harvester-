@@ -27,4 +27,4 @@ The app does not request account credentials, personal access tokens, passwords,
 
 ## User control
 
-Users can remove saved links through Android app data controls. Downloaded ZIP files can be managed through the device's Downloads interface. App-private manifests are removed when app data is cleared or the app is uninstalled.
+Users can remove individual saved links in the Library panel. Clearing app data removes all local links and private manifests. Downloaded ZIP files can be managed through the device's Downloads interface. App-private manifests are removed when app data is cleared or the app is uninstalled.

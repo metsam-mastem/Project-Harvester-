@@ -12,9 +12,10 @@ This file distinguishes implemented capabilities from planned work.
 - [x] Reference-only classification for Hackster, GitBook, Instructables and Nature.
 - [x] Preview invalidation when the URL changes.
 - [x] Android Share intent for plain-text links.
-- [x] Local source library.
+- [x] Local source library with individual link removal.
 - [x] Download queue visibility through Android Download Manager.
 - [x] Private provenance JSON manifest after terminal transfer state.
+- [x] In-app Project DNA manifest inspector.
 - [x] Streaming SHA-256 fingerprint when completed file access is available.
 - [x] Bounded metadata response bodies and network timeouts.
 - [x] CI unit-test, debug APK and source-kit artifact workflow.

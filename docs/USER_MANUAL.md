@@ -41,7 +41,7 @@ After a transfer completes, the app attempts to calculate SHA-256 and writes a p
 
 ## Local Library
 
-Saved links are stored locally in app-private preferences. Saving a reference does not copy the remote page, attachments or media.
+Saved links are stored locally in app-private preferences. Saving a reference does not copy the remote page, attachments or media. Each saved link has a Remove from library action.
 
 ## Settings and privacy
 

@@ -8,7 +8,8 @@
 - Android Share intent intake for plain-text HTTPS links.
 - Local source library.
 - Download queue panel backed by Android Download Manager.
-- Per-transfer private provenance manifest.
+- Per-transfer private provenance manifest and in-app Project DNA inspector.
+- Individual removal of saved source links.
 - Provider-reported license metadata in preview and provenance manifests.\n- Streaming SHA-256 digest when a completed file is accessible.
 - Bounded metadata responses and provider-specific error handling.\n- Gradle 8.11.1 wrapper and weekly Dependabot update checks.
 - CI source-kit and debug-APK artifact packaging.
