@@ -50,6 +50,16 @@ public class ProviderUrlTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void rejectsQueryParametersThatCouldChangeSourceMeaning() {
+        ProviderUrl.parse("https://github.com/owner/project?tab=readme");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rejectsNestedRepositoryPagesAsProjectRoots() {
+        ProviderUrl.parse("https://gitlab.com/group/project/-/tree/main");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void rejectsCredentialBearingUrls() {
         ProviderUrl.parse("https://user:pass@github.com/owner/project");
     }
